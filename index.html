@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -126,35 +126,3 @@
         resDiv.innerText = "Result: API Gravity = " + api.toFixed(2) + " API";
     }
 
-    function calcFlow() {
-        let v = parseFloat(document.getElementById('velocity').value);
-        let d = parseFloat(document.getElementById('diameter').value);
-        if (v < 0 || d <= 0 || isNaN(v) || isNaN(d)) {
-            alert("Please enter valid positive values for velocity and diameter");
-            return;
-        }
-        let radius = d / 2;
-        let area = Math.PI * Math.pow(radius, 2);
-        let q = area * v;
-        let resDiv = document.getElementById('flowResult');
-        resDiv.style.display = "block";
-        resDiv.innerText = "Result: Flow Rate = " + q.toFixed(4) + " m³/s";
-    }
-
-    function calcZ() {
-        let p = parseFloat(document.getElementById('pressure').value);
-        let t = parseFloat(document.getElementById('temp').value);
-        if (p < 0 || t <= 0 || isNaN(p) || isNaN(t)) {
-            alert("Please enter valid physical properties");
-            return;
-        }
-        let z = 1 - (0.0005 * p) / (t / 100);
-        z = Math.max(0.3, Math.min(z, 1.0));
-        let resDiv = document.getElementById('zResult');
-        resDiv.style.display = "block";
-        resDiv.innerText = "Result: Estimated Z-Factor = " + z.toFixed(3);
-    }
-</script>
-
-</body>
-</html>
