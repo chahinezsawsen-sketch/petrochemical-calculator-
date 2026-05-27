@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petrochemical Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 450px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #0275d8;
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 18px;
+            color: #555;
+            border-bottom: 2px solid #0275d8;
+            padding-bottom: 5px;
+        }
+        .card {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #0275d8;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 12px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #0157a0;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 12px;
+            background-color: #e9ecef;
+            border-left: 5px solid #0275d8;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Petrochemical Calculator 🛢️</h1>
+    
+    <div class="card">
+        <h2>1. API Gravity Calculation</h2>
+        <label for="sg">Specific Gravity (e.g., 0.85):</label>
+        <input type="number" id="sg" step="0.01" placeholder="Enter Specific Gravity">
+        <button onclick="calcAPI()">Calculate API</button>
+        <div id="apiResult" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="card">
+        <h2>2. Pipe Flow Rate (Q = A * v)</h2>
+        <label for="velocity">Velocity (m/s):</label>
+        <input type="number" id="velocity" step="0.1" placeholder="Enter Velocity">
+        <label for="diameter">Pipe Diameter (m):</label>
+        <input type="number" id="diameter" step="0.01" placeholder="Enter Diameter">
+        <button onclick="calcFlow()">Calculate Flow Rate</button>
+        <div id="flowResult" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="card">
+        <h2>3. Estimate Gas Z-Factor</h2>
+        <label for="pressure">Pressure (bar):</label>
+        <input type="number" id="pressure" step="0.1" placeholder="Enter Pressure">
+        <label for="temp">Temperature (Kelvin):</label>
+        <input type="number" id="temp" step="1" placeholder="Enter Temperature">
+        <button onclick="calcZ()">Estimate Z-Factor</button>
+        <div id="zResult" class="result" style="display:none;"></div>
+    </div>
+</div>
+
+<script>
+    function calcAPI() {
+        let sg = parseFloat(document.getElementById('sg').value);
+        if (sg <= 0 || isNaN(sg)) {
+            alert("Please enter a valid Specific Gravity greater than 0");
+            return;
+        }
+        let api = (141.5 / sg) - 131.5;
+        let resDiv = document.getElementById('apiResult');
+        resDiv.style.display = "block";
+        resDiv.innerText = "Result: API Gravity = " + api.toFixed(2) + " API";
+    }
+
+    function calcFlow() {
+        let v = parseFloat(document.getElementById('velocity').value);
+        let d = parseFloat(document.getElementById('diameter').value);
+        if (v < 0 || d <= 0 || isNaN(v) || isNaN(d)) {
+            alert("Please enter valid positive values for velocity and diameter");
+            return;
+        }
+        let radius = d / 2;
+        let area = Math.PI * Math.pow(radius, 2);
+        let q = area * v;
+        let resDiv = document.getElementById('flowResult');
+        resDiv.style.display = "block";
+        resDiv.innerText = "Result: Flow Rate = " + q.toFixed(4) + " m³/s";
+    }
+
+    function calcZ() {
+        let p = parseFloat(document.getElementById('pressure').value);
+        let t = parseFloat(document.getElementById('temp').value);
+        if (p < 0 || t <= 0 || isNaN(p) || isNaN(t)) {
+            alert("Please enter valid physical properties");
+            return;
+        }
+        let z = 1 - (0.0005 * p) / (t / 100);
+        z = Math.max(0.3, Math.min(z, 1.0));
+        let resDiv = document.getElementById('zResult');
+        resDiv.style.display = "block";
+        resDiv.innerText = "Result: Estimated Z-Factor = " + z.toFixed(3);
+    }
+</script>
+
+</body>
+</html>
